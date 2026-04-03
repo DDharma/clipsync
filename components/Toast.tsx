@@ -18,7 +18,7 @@ export default function Toast() {
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
 
   const addToast = useCallback((text: string, type: ToastMessage["type"] = "success") => {
-    const id = Date.now();
+    const id = Date.now() + Math.random();
     setToasts((prev) => [...prev, { id, text, type }]);
     setTimeout(() => {
       setToasts((prev) => prev.filter((t) => t.id !== id));

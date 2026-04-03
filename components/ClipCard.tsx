@@ -1,6 +1,7 @@
 "use client";
 
 import { Clip } from "@/lib/types";
+import { safeMimeType } from "@/lib/constants";
 import { showToast } from "./Toast";
 
 interface ClipCardProps {
@@ -111,8 +112,8 @@ export default function ClipCard({ clip, onDelete }: ClipCardProps) {
           {clip.type === "image" && (
             <div className="mt-1">
               <img
-                src={`data:${clip.mimeType};base64,${clip.content}`}
-                alt={clip.fileName || "Image"}
+                src={`data:${safeMimeType(clip.mimeType, "image/png")};base64,${clip.content}`}
+                alt={clip.fileName?.replace(/[<>&"]/g, "_") || "Image"}
                 className="max-h-40 rounded-lg object-contain"
               />
               {clip.fileName && (

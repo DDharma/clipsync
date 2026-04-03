@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getClipById } from "@/lib/store";
+import { sanitizeFilename, safeMimeType } from "@/lib/constants";
 
 export function GET(request: NextRequest) {
   const id = request.nextUrl.searchParams.get("id");
@@ -24,8 +25,8 @@ export function GET(request: NextRequest) {
   }
 
   const buffer = Buffer.from(clip.content, "base64");
-  const mimeType = clip.mimeType || "application/octet-stream";
-  const fileName = clip.fileName || "download";
+  const mimeType = safeMimeType(clip.mimeType);
+  const fileName = sanitizeFilename(clip.fileName || "download");
 
   return new NextResponse(buffer, {
     headers: {

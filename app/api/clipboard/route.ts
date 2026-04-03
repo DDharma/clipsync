@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { addClip, getClips, deleteClip, clearAll, getDevices } from "@/lib/store";
-import { Clip, ClipType } from "@/lib/types";
+import { Clip } from "@/lib/types";
+import { MAX_FILE_SIZE, MAX_TEXT_LENGTH, sanitizeFilename, safeMimeType } from "@/lib/constants";
 
 function generateId(): string {
   return "clip_" + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
@@ -8,7 +9,7 @@ function generateId(): string {
 
 export function GET(request: NextRequest) {
   const { searchParams } = request.nextUrl;
-  const limit = Number(searchParams.get("limit")) || 50;
+  const limit = Math.min(Math.max(Number(searchParams.get("limit")) || 50, 1), 50);
   const since = Number(searchParams.get("since")) || undefined;
   const clips = getClips(limit, since);
   const deviceCount = Object.keys(getDevices()).length;
@@ -19,29 +20,35 @@ export async function POST(request: NextRequest) {
   const contentType = request.headers.get("content-type") || "";
 
   if (contentType.includes("multipart/form-data")) {
-    const formData = await request.formData();
+    let formData: FormData;
+    try {
+      formData = await request.formData();
+    } catch {
+      return NextResponse.json({ error: "Invalid form data" }, { status: 400 });
+    }
+
     const file = formData.get("file") as File | null;
-    const deviceId = formData.get("deviceId") as string;
-    const deviceName = formData.get("deviceName") as string;
+    const deviceId = String(formData.get("deviceId") || "");
+    const deviceName = String(formData.get("deviceName") || "Unknown");
 
     if (!file) {
       return NextResponse.json({ error: "No file provided" }, { status: 400 });
     }
 
-    if (file.size > 50 * 1024 * 1024) {
+    if (file.size > MAX_FILE_SIZE) {
       return NextResponse.json({ error: "File too large (max 50MB)" }, { status: 413 });
     }
 
     const buffer = Buffer.from(await file.arrayBuffer());
     const base64 = buffer.toString("base64");
-    const mimeType = file.type || "application/octet-stream";
+    const mimeType = safeMimeType(file.type);
     const isImage = mimeType.startsWith("image/");
 
     const clip: Clip = {
       id: generateId(),
       type: isImage ? "image" : "file",
       content: base64,
-      fileName: file.name,
+      fileName: sanitizeFilename(file.name),
       fileSize: file.size,
       mimeType,
       deviceId,
@@ -53,13 +60,27 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ clip });
   }
 
-  const body = await request.json();
+  let body: Record<string, unknown>;
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
+  }
+
+  if (!body.content || typeof body.content !== "string") {
+    return NextResponse.json({ error: "Missing or invalid content" }, { status: 400 });
+  }
+
+  if (body.content.length > MAX_TEXT_LENGTH) {
+    return NextResponse.json({ error: "Text too large (max 1MB)" }, { status: 413 });
+  }
+
   const clip: Clip = {
     id: generateId(),
-    type: "text" as ClipType,
+    type: "text",
     content: body.content,
-    deviceId: body.deviceId,
-    deviceName: body.deviceName,
+    deviceId: String(body.deviceId || ""),
+    deviceName: String(body.deviceName || "Unknown"),
     timestamp: Date.now(),
   };
 

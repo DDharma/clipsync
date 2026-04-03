@@ -3,8 +3,7 @@
 import { useState, useRef, KeyboardEvent } from "react";
 import { showToast } from "./Toast";
 import { UploadIcon } from "./Icons";
-
-const MAX_FILE_SIZE = 50 * 1024 * 1024;
+import { MAX_FILE_SIZE } from "@/lib/constants";
 
 interface ClipInputProps {
   deviceId: string;

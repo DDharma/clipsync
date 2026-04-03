@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback, useRef } from "react";
 import { Clip, Device, ServerInfo } from "@/lib/types";
+import { MAX_FILE_SIZE, CLIP_POLL_MS, DEVICE_POLL_MS, HEARTBEAT_MS } from "@/lib/constants";
 import QRSection from "@/components/QRSection";
 import DeviceBar from "@/components/DeviceBar";
 import ClipInput from "@/components/ClipInput";
@@ -103,7 +104,7 @@ export default function Home() {
 
     const clipPoll = setInterval(() => {
       fetchClips(lastFetchRef.current || undefined);
-    }, 1500);
+    }, CLIP_POLL_MS);
 
     const heartbeatInterval = setInterval(() => {
       fetch("/api/devices", {
@@ -111,9 +112,9 @@ export default function Home() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id }),
       });
-    }, 10000);
+    }, HEARTBEAT_MS);
 
-    const devicePoll = setInterval(fetchDevices, 10000);
+    const devicePoll = setInterval(fetchDevices, DEVICE_POLL_MS);
 
     return () => {
       clearInterval(clipPoll);
@@ -141,8 +142,8 @@ export default function Home() {
     }
   };
 
-  const uploadFile = async (file: File) => {
-    if (file.size > 50 * 1024 * 1024) {
+  const uploadFile = useCallback(async (file: File) => {
+    if (file.size > MAX_FILE_SIZE) {
       showToast("File too large (max 50MB)", "error");
       return;
     }
@@ -157,7 +158,7 @@ export default function Home() {
     } catch {
       showToast("Failed to upload", "error");
     }
-  };
+  }, [deviceId, deviceName, fetchClips]);
 
   const handleDragEnter = (e: React.DragEvent) => {
     e.preventDefault();
@@ -199,7 +200,7 @@ export default function Home() {
     };
     window.addEventListener("paste", handlePaste);
     return () => window.removeEventListener("paste", handlePaste);
-  });
+  }, [uploadFile]);
 
   const serverUrl = serverInfo ? `http://${serverInfo.ip}:${serverInfo.port}` : "";
   const deviceCount = Object.keys(devices).length;

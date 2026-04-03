@@ -1,6 +1,5 @@
 import { Clip, Device } from "./types";
-
-const MAX_CLIPS = 50;
+import { MAX_CLIPS, DEVICE_TIMEOUT_MS } from "./constants";
 
 let clips: Clip[] = [];
 const devices: Record<string, Omit<Device, "id">> = {};
@@ -53,7 +52,7 @@ export function getDevices(): Record<string, Omit<Device, "id">> {
   const now = Date.now();
   const active: Record<string, Omit<Device, "id">> = {};
   for (const [id, device] of Object.entries(devices)) {
-    if (now - device.lastSeen < 60000) {
+    if (now - device.lastSeen < DEVICE_TIMEOUT_MS) {
       active[id] = device;
     }
   }

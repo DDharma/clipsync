@@ -18,12 +18,12 @@ export default function QRSection({ serverUrl, deviceCount }: QRSectionProps) {
   }, [deviceCount]);
 
   useEffect(() => {
-    if (!canvasRef.current || !serverUrl) return;
+    if (!canvasRef.current || !serverUrl || !expanded) return;
     QRCode.toCanvas(canvasRef.current, serverUrl, {
       width: 200,
       margin: 2,
       color: { dark: "#ffffff", light: "#00000000" },
-    });
+    }).catch(() => {});
   }, [serverUrl, expanded]);
 
   const copyUrl = async () => {
