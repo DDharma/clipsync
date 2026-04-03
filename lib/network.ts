@@ -1,7 +1,7 @@
 import os from "os";
 import { ServerInfo } from "./types";
 
-const PORT = 3000;
+const PORT = parseInt(process.env.PORT || "5999", 10);
 
 export function getServerInfo(): ServerInfo {
   const interfaces = os.networkInterfaces();
