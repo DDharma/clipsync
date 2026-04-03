@@ -45,7 +45,7 @@ Open `http://localhost:5999` in your browser. To test multi-device functionality
 
 ### Reporting Bugs
 
-Open a [GitHub Issue](https://github.com/AstroAirafar/clipsync/issues) and include:
+Open a [GitHub Issue](https://github.com/DDharma/clipsync/issues) and include:
 
 - Steps to reproduce the bug
 - Expected behavior vs. actual behavior
@@ -54,7 +54,7 @@ Open a [GitHub Issue](https://github.com/AstroAirafar/clipsync/issues) and inclu
 
 ### Suggesting Features
 
-Open a [GitHub Issue](https://github.com/AstroAirafar/clipsync/issues) with the label **Feature Request**. Describe the use case and problem you want to solve, not just the solution.
+Open a [GitHub Issue](https://github.com/DDharma/clipsync/issues) with the label **Feature Request**. Describe the use case and problem you want to solve, not just the solution.
 
 ### Code Contributions
 
@@ -185,4 +185,4 @@ Be respectful, inclusive, and constructive in all interactions. We are committed
 
 ## Questions?
 
-If you have questions or need help, open a [GitHub Issue](https://github.com/AstroAirafar/clipsync/issues) or start a [Discussion](https://github.com/AstroAirafar/clipsync/discussions).
+If you have questions or need help, open a [GitHub Issue](https://github.com/DDharma/clipsync/issues) or start a [Discussion](https://github.com/DDharma/clipsync/discussions).

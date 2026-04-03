@@ -247,8 +247,28 @@ export default function Home() {
 
         <ClipFeed clips={clips} onDelete={handleDelete} onClearAll={handleClearAll} />
 
-        <footer className="text-center text-xs text-muted/60 border-t border-border pt-4">
-          All data stays on your local network. Nothing leaves your Wi-Fi.
+        <footer className="text-center text-xs text-muted/60 border-t border-border pt-4 space-y-1">
+          <p>All data stays on your local network. Nothing leaves your Wi-Fi.</p>
+          <p>
+            Built by{" "}
+            <a
+              href="https://ddharmacharya.in/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary hover:underline"
+            >
+              Dharmvir Dharmacharya
+            </a>
+            {" "}&middot;{" "}
+            <a
+              href="https://github.com/DDharma/clipsync"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary hover:underline"
+            >
+              GitHub
+            </a>
+          </p>
         </footer>
       </div>
 

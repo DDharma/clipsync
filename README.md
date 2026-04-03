@@ -54,7 +54,7 @@ ClipSync is a lightweight, self-hosted clipboard sharing tool that lets you seam
 
 ```bash
 # Clone the repository
-git clone https://github.com/AstroAirafar/clipsync.git
+git clone https://github.com/DDharma/clipsync.git
 cd clipsync
 
 # Install dependencies
@@ -192,6 +192,15 @@ If you need to use ClipSync in less trusted environments, consider running it be
 ## Contributing
 
 Contributions are welcome! Please read the [Contributing Guide](CONTRIBUTING.md) for details on how to get started, code style, and the pull request process.
+
+---
+
+## Author
+
+**Dharmvir Dharmacharya**
+
+- Portfolio: [ddharmacharya.in](https://ddharmacharya.in/)
+- GitHub: [@DDharma](https://github.com/DDharma)
 
 ---
 
