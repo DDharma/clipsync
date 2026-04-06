@@ -181,7 +181,7 @@ export default function Home() {
     dragCounterRef.current = 0;
     setDragging(false);
     const files = e.dataTransfer.files;
-    if (files.length > 0) uploadFile(files[0]);
+    Array.from(files).forEach((file) => uploadFile(file));
   };
 
   useEffect(() => {

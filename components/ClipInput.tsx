@@ -81,7 +81,7 @@ export default function ClipInput({ deviceId, deviceName, onClipAdded }: ClipInp
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (files && files.length > 0) {
-      uploadFile(files[0]);
+      Array.from(files).forEach((file) => uploadFile(file));
       e.target.value = "";
     }
   };
@@ -109,6 +109,7 @@ export default function ClipInput({ deviceId, deviceName, onClipAdded }: ClipInp
           <input
             ref={fileInputRef}
             type="file"
+            multiple
             onChange={handleFileChange}
             className="hidden"
           />
