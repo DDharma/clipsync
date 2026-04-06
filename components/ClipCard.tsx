@@ -57,14 +57,26 @@ async function copyImage(clip: Clip) {
   }
 }
 
-function downloadClip(clip: Clip) {
-  const a = document.createElement("a");
-  a.href = `/api/clipboard/download?id=${clip.id}`;
-  a.download = clip.fileName || "download";
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  showToast("Downloading...", "info");
+async function downloadClip(clip: Clip) {
+  try {
+    const res = await fetch(`/api/clipboard/download?id=${clip.id}`);
+    if (!res.ok) {
+      showToast("Download failed — clip may have expired", "error");
+      return;
+    }
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = clip.fileName || "download";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showToast("Downloading...", "info");
+  } catch {
+    showToast("Download failed", "error");
+  }
 }
 
 export default function ClipCard({ clip, onDelete }: ClipCardProps) {
@@ -149,7 +161,7 @@ export default function ClipCard({ clip, onDelete }: ClipCardProps) {
             )}
           </button>
 
-          {(clip.type === "image" || clip.type === "file") && (
+          {clip.type === "image" && (
             <button
               onClick={() => downloadClip(clip)}
               className="p-2 rounded-lg hover:bg-secondary/10 text-muted hover:text-secondary transition-colors"
